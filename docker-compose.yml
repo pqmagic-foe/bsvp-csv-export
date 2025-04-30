@@ -1,0 +1,13 @@
+services:
+  bsvp-csv-export:
+    container_name: bsvp-csv-export
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - "${config_file:-./config.json}:/app/config.json:ro"
+      - "${data_directory:-./data}:/app/data:ro"
+      - "${config_directory:-./configs}:/app/configs:ro"
+      - "${mappings_directory:-./mappings}:/app/mappings:ro"
+      - "${export_directory:-./export}:/app/export"
+      - "${logs_directory:-./logs}:/app/logs"
