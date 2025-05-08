@@ -89,6 +89,12 @@ def servefav():
 def servemedia(path):
     return send_from_directory("client/build/static/media/", path)
 
+
+@app.route("/fonts/<path:path>")
+def servefonts(path):
+    return send_from_directory("client/build/fonts/", path)
+
+
 if __name__ == "__main__":
     app.env = "development"
     app.debug = True
