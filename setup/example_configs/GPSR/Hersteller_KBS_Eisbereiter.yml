@@ -1,0 +1,9 @@
+Priority: 10
+Conditions:
+  "0000271": "KBS" # Hersteller
+  "0000191": "Eisbereiter" # Produkttyp
+Templates:
+  Download:
+    Link: "media/Links/sicherheitsdatenblatt-eiswuerfelbereiter-kbs-gastrotechnik.pdf"
+    Titel: "Download Produktsicherheitsdatenblatt - KBS Eiswürfelbereiter"
+    Text: "Produktsicherheitsdatenblatt - KBS Eiswürfelbereiter"

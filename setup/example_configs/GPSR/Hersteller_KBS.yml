@@ -1,0 +1,16 @@
+Conditions:
+  "0000271": "KBS" # Hersteller
+Templates:
+  Hersteller:
+    Text: |
+      <p>KBS Gastrotechnik GmbH<br>
+      Schoßbergstraße 26<br>
+      65201 Wiesbaden<br>
+      Abt. Produktsicherheit</p>
+      <p>Telefon: 0611 44787-150<br>
+      Email: compliance@kbs-gastrotechnik.de<br>
+      Web: https://www.kbs-gastrotechnik.de/</p>
+  Download:
+    Link: "media/Links/sicherheitsdatenblatt-kleingeraete-kbs-gastrotechnik.pdf"
+    Titel: "Download Produktsicherheitsdatenblatt - KBS Gastrotechnik"
+    Text: "Produktsicherheitsdatenblatt - KBS Gastrotechnik"

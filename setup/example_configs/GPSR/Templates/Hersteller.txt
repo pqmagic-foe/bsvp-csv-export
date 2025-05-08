@@ -1,0 +1,6 @@
+<details style="background: #eee; border: 1px solid #666; border-radius: 3px; margin-bottom: 0.5rem;">
+<summary style="padding: 1rem; background: #D6D6D6; color: #000; cursor: pointer;"> <b>Herstellerinformation:</b></summary>
+<div style="padding: 1rem 1rem 1px 1rem;">
+{Text}
+</div>
+</details>

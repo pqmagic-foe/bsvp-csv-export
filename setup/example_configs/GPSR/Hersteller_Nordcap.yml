@@ -1,0 +1,15 @@
+Conditions:
+  "0000271": "Nordcap" # Hersteller
+Templates:
+  Hersteller:
+    Text: |
+      <p>NordCap GmbH &amp; Co. KG<br>
+      Thalenhorststraße 15<br>
+      DE-28307 Bremen (Germany)</p>
+      <p>Telefon: +49 421 48557-0<br>
+      Email: produktsicherheit@nordcap.de<br>
+      Web: https://www.nordcap.de/</p>
+  Download:
+    Link: "media/Links/sicherheitsdatenblatt-kuehl-tiefkuehlgeraete-Nordcap.pdf"
+    Titel: "Download Produktsicherheitsdatenblatt - Nordcap Kühlgeräte"
+    Text: "Produktsicherheitsdatenblatt - Nordcap Kühlgeräte"

@@ -1,0 +1,11 @@
+Conditions:
+  "0000152": "Nordcap" # Lieferant
+Templates:
+  Lieferant:
+    Text: |
+      <p>NordCap GmbH &amp; Co. KG<br>
+      Thalenhorststraße 15<br>
+      DE-28307 Bremen (Germany)</p>
+      <p>Telefon: +49 421 48557-0<br>
+      Email: produktsicherheit@nordcap.de<br>
+      Web: https://www.nordcap.de/</p>

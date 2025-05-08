@@ -14,6 +14,7 @@ from modules.constants import GENERAL_CONFIG_FILE, MANUFACTURER_ENDING, \
     MANUFACTURER_INFO_ENDING, PRODUCT_ENDING, \
     CONFIGURATOR_NAME, GAMBIO_NAME, SHOP_NAME, PRICE_NAME, COMPLETE_NAME, \
     DATA_DIRECTORY, CUSTOM_NAME
+from modules.parser.gpsr import gpsr_load_configs
 
 from modules.parser.prod import parse_product
 from modules.parser.ilugg import parse_manufacturer_information
@@ -75,6 +76,9 @@ class Runner:
         with open(GENERAL_CONFIG_FILE, "r", encoding="utf-8") as config_file:
             config = json.load(config_file)
             self.max_products_per_file = config["max-articles-per-file"]
+
+        gpsr_load_configs()
+
         self.exporters = {
             "configurator": {
                 "module": ConfiguratorExporter(self.manufacturers),

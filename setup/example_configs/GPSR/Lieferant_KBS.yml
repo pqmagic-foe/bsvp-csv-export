@@ -1,0 +1,12 @@
+Conditions:
+  "0000152": "KBS" # Lieferant
+Templates:
+  Lieferant:
+    Text: |
+      <p>KBS Gastrotechnik GmbH<br>
+      Schoßbergstraße 26<br>
+      65201 Wiesbaden<br>
+      Abt. Produktsicherheit</p>
+      <p>Telefon: 0611 44787-150<br>
+      Email: compliance@kbs-gastrotechnik.de<br>
+      Web: https://www.kbs-gastrotechnik.de/</p>
