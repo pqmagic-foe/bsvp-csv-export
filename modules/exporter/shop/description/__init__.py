@@ -53,16 +53,10 @@ def gpsr_render_description(prod_fields):
                 break
         if conditions_met:
             for name, data in config.get("Templates", {}).items():
-                if name in result:
-                    print(f"! Overwriting {name} for {prod_fields["NAME"]}")
-                    print(f"Before:\n{result[name]}\n\nAfter:\n{data}\n\n")
-                    print(f"Conditions:\n{conditions}\n\n")
                 result[name] = gpsr_process_template(name, data)
 
     if len(result) == 0:
         return ""
-    
-    print(f"{prod_fields["NAME"]} {prod_fields["ARTNR"]} GPSR: {result.keys()}")
 
     description = "<!--gpsr-->"
     description += result.get("Lieferant", "")
