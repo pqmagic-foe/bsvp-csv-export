@@ -3,11 +3,11 @@ name = "bsvp-csv-export"
 version = "0.1.0"
 description = "Python-basierter Exporter für die Umwandlung von BSVP zu CSV Dateien"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = "==3.8.*"
 dependencies = [
-    "apscheduler>=3.11.0",
-    "flask>=3.1.0",
-    "flask-cors>=5.0.1",
+    "apscheduler>=3.10.4",
+    "flask>=3.0.3",
+    "flask-cors>=5.0.0",
     "pytz>=2025.2",
     "pyyaml>=6.0.2",
 ]
