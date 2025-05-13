@@ -37,7 +37,7 @@ def parse_product(product_path):
                 if len(attribute) != 2:
                     continue
                 try:
-                    attribute_id = re.search("\[\[.*\.(.+?)\]\]", attribute[1]).group(1)
+                    attribute_id = re.search(r"\[\[.*\.(.+?)\]\]", attribute[1]).group(1)
                 except AttributeError:
                     continue
                 try:
