@@ -14,7 +14,7 @@ class BaseExporter:
             self.configurator_csv_separator = self.config["konfigurator-csv-separator"]
             self.csv_encoding = self.config["csv-encoding"]
             self.csv_quote_char = self.config["csv-quote-char"]
-            self.csv_escpape_char = self.config["csv-escape-char"]
+            self.csv_escape_char = self.config["csv-escape-char"]
             self.configs_base_directory = CONFIGS_DIRECTORY
             self.bsvp_directory = DATA_DIRECTORY
             self.tooltip_path = TOOLTIP_PATH
@@ -88,7 +88,7 @@ class BaseExporter:
 
     def get_csv_handler(self, file, csv_module):
         return(csv_module(file, delimiter=self.csv_separator, quotechar=self.csv_quote_char,
-                                     escapechar=self.csv_escpape_char, quoting=csv.QUOTE_NONE))
+                                     escapechar=self.csv_escape_char, quoting=csv.QUOTE_NONE))
 
     def write_csv_row(self, path, row, file_mode="a"):
         with self.open_file(path, file_mode) as file:
