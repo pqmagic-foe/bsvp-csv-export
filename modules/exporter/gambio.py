@@ -1,6 +1,6 @@
 import json
 from collections import OrderedDict
-from .shop import ShopExporter, special_cases
+from modules.exporter.shop import ShopExporter, special_cases, export_description
 from modules.constants import GAMBIO_NAME, SHOP_NAME, TECHDATA
 from modules.formatter import format_field
 
@@ -15,7 +15,8 @@ def export_checkout_information(parameters):
 
 # Gambio-specific special cases
 gambio_special_cases = {
-    "p_checkout_information.de": export_checkout_information
+    "p_checkout_information.de": export_checkout_information,
+    "p_desc.de": export_description
 }
 
 class GambioExporter(ShopExporter):
