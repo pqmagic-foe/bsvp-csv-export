@@ -24,6 +24,7 @@
   "p_name.de": { "prod": "NAME" },
   "p_desc.de": {},
   "p_shortdesc.de": { "prod": "SHORTDESC" },
+  "p_checkout_information.de": {},
   "p_meta_title.de": { "prod": "METATITLE" },
   "p_meta_desc.de": { "prod": "METADESC" },
   "p_meta_key.de": { "prod": "METAKEYS" },
