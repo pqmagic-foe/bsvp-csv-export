@@ -48,7 +48,7 @@ def gpsr_render_description(prod_fields):
         conditions = config.get("Conditions", {})
         for field, value in conditions.items():
             field_value = tech_data.get(field, "")
-            if field_value != value:
+            if str(field_value).lower() != str(value).lower():
                 conditions_met = False
                 break
         if conditions_met:
