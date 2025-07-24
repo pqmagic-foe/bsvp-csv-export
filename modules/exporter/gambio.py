@@ -48,9 +48,10 @@ class GambioExporter(ShopExporter):
             else:
                 header_fields.append(header_field)
 
-        # Add Gambio-specific fields
-        gambio_fields = list(gambio_special_cases.keys())
-        header_fields.extend(gambio_fields)
+        # Add Gambio-specific fields only if they don't already exist
+        for field_name in gambio_special_cases.keys():
+            if field_name not in header_fields:
+                header_fields.append(field_name)
         
         header_fields = header_fields + list(self.techdata_fields.values())
         return header_fields
@@ -78,18 +79,20 @@ class GambioExporter(ShopExporter):
         for other_category_index in other_category_indices:
             row[other_category_index] = None
 
-        # Add Gambio-specific fields
+        # Add Gambio-specific fields only if they were added to the header
+        shop_header_fields = super().header_fields(prod_fields, ilugg_fields)
         for field_name in gambio_special_cases.keys():
-            parameters = {
-                "prod_fields": prod_fields,
-                "ilugg_fields": ilugg_fields,
-                "attribute_names": attribute_names,
-                "attribute_types": attribute_types,
-                "tooltips": self.tooltips,
-                "specification": {}
-            }
-            value = gambio_special_cases[field_name](parameters)
-            row.append(value)
+            if field_name not in shop_header_fields:
+                parameters = {
+                    "prod_fields": prod_fields,
+                    "ilugg_fields": ilugg_fields,
+                    "attribute_names": attribute_names,
+                    "attribute_types": attribute_types,
+                    "tooltips": self.tooltips,
+                    "specification": {}
+                }
+                value = gambio_special_cases[field_name](parameters)
+                row.append(value)
 
         # Füge TECHDATA Felder hinter Shop Feldern an
         for techdata_field in self.techdata_fields.keys():
