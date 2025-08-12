@@ -5,10 +5,10 @@ def unescape_bsvp_to_html(text):
         return html_escape_code
     return unescape(text, replacement)
 
-# def unescape_bsvp_to_text(text):
-#     def replacement(character, html_escape_code):
-#         return character
-#     return unescape(text, replacement)
+def unescape_bsvp_to_text(text):
+    def replacement(character, html_escape_code):
+        return character
+    return unescape(text, replacement)
 
 def unescape(text, replacement):
     for character, html_escape_code in escaped_characters.items():

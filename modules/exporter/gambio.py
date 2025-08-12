@@ -10,9 +10,11 @@ category_postfix = ".de"
 main_category = category_prefix + category_postfix
 
 def export_checkout_information(parameters):
-    """Copies the value from p_shortdesc.de to p_checkout_information.de"""
+    """Copies the value from p_shortdesc.de to p_checkout_information.de with proper text processing"""
+    from modules.exporter.utils.unescape_bsvp import unescape_bsvp_to_text
     prod_fields = parameters["prod_fields"]
-    return prod_fields.get("SHORTDESC", None)
+    shortdesc = prod_fields.get("SHORTDESC", None)
+    return unescape_bsvp_to_text(shortdesc)
 
 # Gambio-specific special cases
 gambio_special_cases = {
