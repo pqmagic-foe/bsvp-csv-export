@@ -41,6 +41,8 @@ class ShopExporter(BaseExporter):
         with open(export_config_path, "r", encoding="utf-8") as export_config_file:
             self.export_config = json.load(export_config_file, object_pairs_hook=OrderedDict)
 
+        self.special_cases = dict(special_cases)
+
         # Konfiguration des Exporters
         self.uses_manufacturer_information = True
         self.skipping_policy["delivery_status"] = False
@@ -114,7 +116,7 @@ class ShopExporter(BaseExporter):
                 self.__iterate(value_specification, prod_fields, ilugg_fields, get_iterable_value)
 
             else:
-                if field_name in special_cases:
+                if field_name in self.special_cases:
                     parameters = {
                         "prod_fields": prod_fields,
                         "ilugg_fields": ilugg_fields,
@@ -123,7 +125,7 @@ class ShopExporter(BaseExporter):
                         "tooltips": self.tooltips,
                         "specification": value_specification
                     }
-                    value = special_cases[field_name](parameters)
+                    value = self.special_cases[field_name](parameters)
                 else:
                     value = self.__get_value(value_specification, prod_fields, ilugg_fields)
 

@@ -12,7 +12,7 @@ import traceback
 from apscheduler.schedulers.background import BackgroundScheduler
 from modules.constants import GENERAL_CONFIG_FILE, MANUFACTURER_ENDING, \
     MANUFACTURER_INFO_ENDING, PRODUCT_ENDING, \
-    CONFIGURATOR_NAME, GAMBIO_NAME, SHOP_NAME, PRICE_NAME, COMPLETE_NAME, \
+    CONFIGURATOR_NAME, GAMBIO_NAME, SHOP_NAME, SHOP_JSONLD_NAME, PRICE_NAME, COMPLETE_NAME, \
     DATA_DIRECTORY, CUSTOM_NAME
 from modules.parser.gpsr import gpsr_load_configs
 
@@ -22,6 +22,7 @@ from modules.exporter.configurator import ConfiguratorExporter
 from modules.exporter.gambio import GambioExporter
 from modules.exporter.complete import CompleteExporter
 from modules.exporter.shop import ShopExporter
+from modules.exporter.shop_jsonld import ShopJsonLDExporter
 from modules.exporter.price import PriceExporter
 from modules.exporter.custom import CustomExporter
 from modules.logger import Logger
@@ -100,6 +101,13 @@ class Runner:
                 "running": False,
                 "log": [],
                 "name": SHOP_NAME
+            },
+            "shop_jsonld": {
+                "module": ShopJsonLDExporter(self.manufacturers),
+                "scheduled": False,
+                "running": False,
+                "log": [],
+                "name": SHOP_JSONLD_NAME
             },
             "price": {
                 "module": PriceExporter(self.manufacturers),
