@@ -106,9 +106,3 @@ def is_empty_value(value, log_reason=False, field_name=None):
                 return True
 
     return False
-
-
-def format_unit_value(value, unit=""):
-    if unit:
-        return f"{value} {unit}".strip()
-    return str(value).strip()

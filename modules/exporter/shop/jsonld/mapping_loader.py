@@ -63,7 +63,7 @@ def load_mapping(product_type):
     logger = Logger()
 
     product_types = mappings.get("product_types", {})
-    defaults = mappings.get("defaults", {})
+    product_fields = mappings.get("product", {})
 
     product_config = None
     if product_type in product_types:
@@ -81,26 +81,17 @@ def load_mapping(product_type):
 
     merged_config = {}
 
-    if "core" in defaults:
-        merged_config["core"] = defaults["core"]
-    if "dimensions" in defaults:
-        merged_config["dimensions"] = defaults["dimensions"]
+    # Copy product fields (can be overridden by product-type-specific config)
+    merged_config["product"] = dict(product_fields)
+
+    # Override product fields with product-type-specific fields if present
+    if "product" in product_config:
+        merged_config["product"].update(product_config["product"])
 
     if "additional_properties" in product_config:
         merged_config["additional_properties"] = product_config["additional_properties"]
 
-    if "core" in product_config:
-        merged_config["core"] = product_config["core"]
-    if "dimensions" in product_config:
-        merged_config["dimensions"] = product_config["dimensions"]
-
     return merged_config
-
-
-def get_available_product_types():
-    mappings = load_mappings()
-    product_types = mappings.get("product_types", {})
-    return list(product_types.keys())
 
 
 def reload_mappings():

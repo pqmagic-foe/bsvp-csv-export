@@ -5,8 +5,7 @@ Generates structured schema product data for AI bots and Google
 """
 
 from .mapping_loader import identify_product_type, load_mapping
-from .core_fields import generate_core_fields
-from .dimensions import generate_dimensions
+from .product_fields import generate_product_fields
 from .additional_properties import generate_additional_properties
 from .renderer import render_script_tag
 from modules.logger import Logger
@@ -48,21 +47,13 @@ def export_jsonld(parameters):
         "@type": "Product"
     }
 
-    logger.log(f"[JSON-LD] Product '{product_name}': Generating core fields")
-    core_fields = generate_core_fields(prod_fields, mapping)
-    if core_fields:
-        jsonld_data.update(core_fields)
-        logger.log(f"[JSON-LD] Product '{product_name}': Core fields added successfully")
+    logger.log(f"[JSON-LD] Product '{product_name}': Generating product fields")
+    product_fields = generate_product_fields(prod_fields, mapping)
+    if product_fields:
+        jsonld_data.update(product_fields)
+        logger.log(f"[JSON-LD] Product '{product_name}': Product fields added successfully")
     else:
-        logger.log(f"[JSON-LD] Product '{product_name}': No core fields generated")
-
-    logger.log(f"[JSON-LD] Product '{product_name}': Generating dimensions")
-    dimensions = generate_dimensions(prod_fields, mapping)
-    if dimensions:
-        jsonld_data.update(dimensions)
-        logger.log(f"[JSON-LD] Product '{product_name}': Dimensions added successfully")
-    else:
-        logger.log(f"[JSON-LD] Product '{product_name}': No dimensions generated")
+        logger.log(f"[JSON-LD] Product '{product_name}': No product fields generated")
 
     logger.log(f"[JSON-LD] Product '{product_name}': Generating additional properties")
     additional_props = generate_additional_properties(prod_fields, mapping)

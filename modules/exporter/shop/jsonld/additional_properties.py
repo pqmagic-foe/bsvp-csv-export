@@ -77,8 +77,3 @@ def generate_additional_properties(prod_fields, mapping):
     logger.log(f"[JSON-LD] Product '{product_name}': Additional properties summary - Total: {total_properties}, Added: {len(additional_properties)}, Skipped (empty): {skipped_empty_value}, Skipped (config error): {skipped_missing_config}")
 
     return additional_properties if additional_properties else None
-
-
-def has_additional_properties(jsonld_data):
-    additional_props = jsonld_data.get("additionalProperty", [])
-    return len(additional_props) > 0

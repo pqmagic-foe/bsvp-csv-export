@@ -27,9 +27,3 @@ def render_script_tag(jsonld_data):
     except (TypeError, ValueError) as e:
         logger.log(f"[JSON-LD] [ERROR] Failed to serialize JSON-LD data: {e}")
         return None
-
-
-def render_compact(jsonld_data):
-    if not jsonld_data:
-        return None
-    return json.dumps(jsonld_data, ensure_ascii=False, separators=(',', ':'))
