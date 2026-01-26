@@ -24,6 +24,7 @@ class Logger():
             for log in os.listdir(LOG_DIRECTORY):
                 if exporter_id in log:
                     exporter_logs.append(os.path.join(LOG_DIRECTORY, log))
+            exporter_logs.sort()
             delete_logs = exporter_logs[:-KEEP_LOGS]
             for log in delete_logs:
                 os.remove(log)
