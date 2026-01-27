@@ -8,6 +8,20 @@ from modules.logger import Logger
 from modules.formatter import format_field
 
 
+def get_product_name(prod_fields):
+    """Extract product name for logging purposes."""
+    return prod_fields.get("NAME", prod_fields.get("ARTNR", "Unknown"))
+
+
+def strip_unit_suffix(value, unit):
+    """Strip unit suffix from value if present. Returns (stripped_value, was_stripped)."""
+    if value.endswith(" " + unit):
+        return value[:-len(" " + unit)].strip(), True
+    if value.endswith(unit):
+        return value[:-len(unit)].strip(), True
+    return value, False
+
+
 def parse_template(template, prod_fields, log_field_name=None):
     logger = Logger()
 

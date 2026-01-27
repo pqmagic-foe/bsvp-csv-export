@@ -7,6 +7,7 @@ Generates structured schema product data for AI bots and Google
 from .mapping_loader import identify_product_type, load_mapping
 from .product_fields import generate_product_fields
 from .additional_properties import generate_additional_properties
+from .normalizer import get_product_name
 from .renderer import render_script_tag
 from modules.logger import Logger
 
@@ -15,7 +16,7 @@ def export_jsonld(parameters):
     prod_fields = parameters.get("prod_fields", {})
     logger = Logger()
 
-    product_name = prod_fields.get("NAME", prod_fields.get("ARTNR", "Unknown"))
+    product_name = get_product_name(prod_fields)
     product_artnr = prod_fields.get("ARTNR", "N/A")
 
     logger.log("")

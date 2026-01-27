@@ -4,7 +4,7 @@ Generic field processor for JSON-LD export
 Handles fields based on their type definition: simple, QuantitativeValue, etc.
 """
 
-from .normalizer import parse_template, normalize_decimal
+from .normalizer import parse_template, normalize_decimal, get_product_name
 from modules.logger import Logger
 
 
@@ -13,7 +13,7 @@ def generate_product_fields(prod_fields, mapping):
     result = {}
     logger = Logger()
 
-    product_name = prod_fields.get("NAME", prod_fields.get("ARTNR", "Unknown"))
+    product_name = get_product_name(prod_fields)
     logger.log(f"[JSON-LD] Product '{product_name}': Processing {len(product_config)} product field(s)")
 
     for field_name, field_config in product_config.items():
@@ -36,41 +36,25 @@ def generate_product_fields(prod_fields, mapping):
         if field_type == "simple":
             result[field_name] = str(resolved_value)
             logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Field '{field_name}' = '{resolved_value}'")
-
-        elif field_type == "QuantitativeValue":
-            normalized_value = normalize_decimal(resolved_value, field_name=field_name)
-
-            if isinstance(normalized_value, (int, float)):
-                type_data = {
-                    "@type": "QuantitativeValue",
-                    "value": normalized_value
-                }
-
-                if "unitCode" in field_config:
-                    type_data["unitCode"] = field_config["unitCode"]
-                if "unitText" in field_config:
-                    type_data["unitText"] = field_config["unitText"]
-
-                result[field_name] = type_data
-                unit_info = field_config.get("unitCode", "")
-                logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Field '{field_name}' = {normalized_value} {unit_info}")
-            else:
-                logger.log(f"[JSON-LD] [WARNING] Product '{product_name}': Field '{field_name}': Value '{resolved_value}' is not numeric")
-
         else:
-            # Any other type: pass through as structured object
-            type_data = {
-                "@type": field_type,
-                "value": str(resolved_value)
-            }
-
-            # Copy any additional properties from config (except type and value)
+            # Structured type (QuantitativeValue, etc.): copy all config keys except "type" and "value"
+            type_data = {"@type": field_type}
             for key, val in field_config.items():
                 if key not in ("type", "value"):
                     type_data[key] = val
 
+            # For QuantitativeValue, normalize to numeric
+            if field_type == "QuantitativeValue":
+                normalized_value = normalize_decimal(resolved_value, field_name=field_name)
+                if not isinstance(normalized_value, (int, float)):
+                    logger.log(f"[JSON-LD] [WARNING] Product '{product_name}': Field '{field_name}': Value '{resolved_value}' is not numeric")
+                    continue
+                type_data["value"] = normalized_value
+            else:
+                type_data["value"] = str(resolved_value)
+
             result[field_name] = type_data
-            logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Field '{field_name}' (@type: {field_type}) = '{resolved_value}'")
+            logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Field '{field_name}' (@type: {field_type}) = '{type_data['value']}'")
 
     if result:
         logger.log(f"[JSON-LD] Product '{product_name}': Added {len(result)} product field(s): {', '.join(result.keys())}")

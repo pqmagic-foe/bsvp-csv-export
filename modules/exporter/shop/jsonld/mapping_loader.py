@@ -49,7 +49,8 @@ def identify_product_type(prod_fields):
 
     if not product_type:
         logger = Logger()
-        product_name = prod_fields.get("NAME", prod_fields.get("ARTNR", "Unknown"))
+        from .normalizer import get_product_name
+        product_name = get_product_name(prod_fields)
         logger.log(f"[JSON-LD] [INFO] Product '{product_name}': No product type found (field 0000191 empty)")
 
     return product_type if product_type else None
@@ -65,24 +66,21 @@ def load_mapping(product_type):
     product_types = mappings.get("product_types", {})
     product_fields = mappings.get("product", {})
 
-    product_config = None
+    # Try exact match first, then case-insensitive
     if product_type in product_types:
         logger.log(f"[JSON-LD] [INFO] Found mapping for product type: '{product_type}'")
         product_config = product_types[product_type]
     else:
-        for key, value in product_types.items():
-            if key.lower() == product_type.lower():
-                logger.log(f"[JSON-LD] [INFO] Found mapping for product type: '{product_type}' (case-insensitive match with '{key}')")
-                product_config = value
-                break
-
-    if not product_config:
-        return None
-
-    merged_config = {}
+        lower_map = {k.lower(): k for k in product_types}
+        original_key = lower_map.get(product_type.lower())
+        if original_key:
+            logger.log(f"[JSON-LD] [INFO] Found mapping for product type: '{product_type}' (case-insensitive match with '{original_key}')")
+            product_config = product_types[original_key]
+        else:
+            return None
 
     # Copy product fields (can be overridden by product-type-specific config)
-    merged_config["product"] = dict(product_fields)
+    merged_config = {"product": dict(product_fields)}
 
     # Override product fields with product-type-specific fields if present
     if "product" in product_config:

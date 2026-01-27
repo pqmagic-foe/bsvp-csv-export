@@ -4,7 +4,7 @@ Additional properties generator for JSON-LD export
 Builds additionalProperty array from technical mask fields
 """
 
-from .normalizer import parse_template
+from .normalizer import parse_template, get_product_name, strip_unit_suffix
 from .mapping_loader import load_mappings
 from modules.logger import Logger
 
@@ -13,7 +13,7 @@ def generate_additional_properties(prod_fields, mapping):
     property_ids = mapping.get("additional_properties", [])
     logger = Logger()
 
-    product_name = prod_fields.get("NAME", prod_fields.get("ARTNR", "Unknown"))
+    product_name = get_product_name(prod_fields)
     total_properties = len(property_ids)
     logger.log(f"[JSON-LD] Product '{product_name}': Processing {total_properties} additional properties")
 
@@ -54,12 +54,10 @@ def generate_additional_properties(prod_fields, mapping):
         # Strip duplicate unit from value end if unitText is present
         unit = prop_def.get("unitText")
         if unit:
-            if resolved_value.endswith(" " + unit):
-                property_value["value"] = resolved_value[:-len(" " + unit)].strip()
-                logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' - removed duplicate unit from value: '{resolved_value}' -> '{property_value['value']}'")
-            elif resolved_value.endswith(unit):
-                property_value["value"] = resolved_value[:-len(unit)].strip()
-                logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' - removed duplicate unit from value: '{resolved_value}' -> '{property_value['value']}'")
+            stripped_value, was_stripped = strip_unit_suffix(resolved_value, unit)
+            if was_stripped:
+                property_value["value"] = stripped_value
+                logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' - removed duplicate unit: '{resolved_value}' -> '{stripped_value}'")
             logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' = '{property_value['value']}' (unit: '{unit}')")
         else:
             logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' = '{resolved_value}'")
