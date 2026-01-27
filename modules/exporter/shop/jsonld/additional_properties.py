@@ -33,44 +33,36 @@ def generate_additional_properties(prod_fields, mapping):
             continue
 
         template = prop_def.get("value")
-        label = prop_def.get("label")
+        name = prop_def.get("name")
 
-        if not template or not label:
+        if not template or not name:
             skipped_missing_config += 1
-            logger.log(f"[JSON-LD] [WARNING] Product '{product_name}': Property definition '{property_id}' missing value or label: {prop_def}")
+            logger.log(f"[JSON-LD] [WARNING] Product '{product_name}': Property definition '{property_id}' missing value or name: {prop_def}")
             continue
 
-        resolved_value = parse_template(template, prod_fields, log_field_name=f"property '{label}'")
+        resolved_value = parse_template(template, prod_fields, log_field_name=f"property '{name}'")
 
         if resolved_value is None:
             skipped_empty_value += 1
             continue
 
-        unit = prop_def.get("unit")
-        if unit:
-            value_to_use = resolved_value
-            # Strip duplicate unit from value end
-            if resolved_value.endswith(" " + unit):
-                value_to_use = resolved_value[:-len(" " + unit)].strip()
-                logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{label}' - removed duplicate unit from value: '{resolved_value}' -> '{value_to_use}'")
-            elif resolved_value.endswith(unit):
-                value_to_use = resolved_value[:-len(unit)].strip()
-                logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{label}' - removed duplicate unit from value: '{resolved_value}' -> '{value_to_use}'")
+        # Copy all keys from prop_def, then override value with resolved template
+        property_value = {"@type": "PropertyValue"}
+        property_value.update(prop_def)
+        property_value["value"] = resolved_value
 
-            property_value = {
-                "@type": "PropertyValue",
-                "name": label,
-                "value": value_to_use,
-                "unitText": unit
-            }
-            logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{label}' = '{value_to_use}' (unit: '{unit}')")
+        # Strip duplicate unit from value end if unitText is present
+        unit = prop_def.get("unitText")
+        if unit:
+            if resolved_value.endswith(" " + unit):
+                property_value["value"] = resolved_value[:-len(" " + unit)].strip()
+                logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' - removed duplicate unit from value: '{resolved_value}' -> '{property_value['value']}'")
+            elif resolved_value.endswith(unit):
+                property_value["value"] = resolved_value[:-len(unit)].strip()
+                logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' - removed duplicate unit from value: '{resolved_value}' -> '{property_value['value']}'")
+            logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' = '{property_value['value']}' (unit: '{unit}')")
         else:
-            property_value = {
-                "@type": "PropertyValue",
-                "name": label,
-                "value": resolved_value
-            }
-            logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{label}' = '{resolved_value}'")
+            logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' = '{resolved_value}'")
 
         additional_properties.append(property_value)
 
