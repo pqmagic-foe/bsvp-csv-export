@@ -5,6 +5,7 @@ Mapping configuration loader for JSON-LD export
 
 import json
 import os
+from modules.constants import JSONLD_MAPPING_PATH
 from modules.logger import Logger
 
 
@@ -17,7 +18,7 @@ def load_mappings():
     if _mapping_cache is not None:
         return _mapping_cache
 
-    mapping_path = "mappings/jsonld/jsonld-mapping.json"
+    mapping_path = JSONLD_MAPPING_PATH
     logger = Logger()
 
     if not os.path.exists(mapping_path):
