@@ -45,7 +45,8 @@ def export_jsonld(parameters):
     logger.log(f"[JSON-LD] Product '{product_name}': Building JSON-LD structure")
     jsonld_data = {
         "@context": "https://schema.org",
-        "@type": "Product"
+        "@type": "Product",
+        "@id": "#product"
     }
 
     logger.log(f"[JSON-LD] Product '{product_name}': Generating product fields")
