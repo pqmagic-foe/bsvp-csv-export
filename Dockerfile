@@ -6,14 +6,14 @@ RUN printf '{"hash":"%s","branch":"%s","timestamp":"%s"}\n' \
     "$(git rev-parse --abbrev-ref HEAD)" \
     "$(git log -1 --format=%cI)" > /build-info.json
 
-FROM node:11-alpine AS builder-node
+FROM node:18-alpine AS builder-node
 
 # Build client
 COPY client /app/client
 WORKDIR /app/client
 RUN npm install && npm run build
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 

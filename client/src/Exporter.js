@@ -56,7 +56,7 @@ export default class Exporter extends Component {
 
   renderRunButton() {
     const { scheduled, running, stopping } = this.props;
-    if (running && stopping) {
+    if (scheduled || (running && stopping)) {
       return <StyledCircularProgress />;
     } else if (running) {
       return (
@@ -66,8 +66,8 @@ export default class Exporter extends Component {
       );
     } else {
       return (
-        <IconButton onClick={this.runExporter.bind(this)} disabled={scheduled}>
-          <PlayIcon style={scheduled ? {} : { color: "#388e3c" }} />
+        <IconButton onClick={this.runExporter.bind(this)}>
+          <PlayIcon style={{ color: "#388e3c" }} />
         </IconButton>
       );
     }
