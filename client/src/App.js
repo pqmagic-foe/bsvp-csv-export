@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import Header from "./Header";
 import Exporters from "./Exporters";
 import Settings from "./Settings";
@@ -8,7 +8,7 @@ import { get } from "./api";
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { manufacturers: null, selectAll: false, showSettings: false };
+    this.state = { manufacturers: null, selectAll: false, showSettings: false, buildInfo: null };
   }
 
   componentDidMount() {
@@ -23,10 +23,13 @@ export default class App extends Component {
         )
       })
     );
+    get("/build-info").then(info => {
+      this.setState({ buildInfo: info });
+    });
   }
 
   render() {
-    const { showSettings, manufacturers, selectAll } = this.state;
+    const { showSettings, manufacturers, selectAll, buildInfo } = this.state;
     return (
       <div className="App">
         <GlobalStyle />
@@ -41,6 +44,11 @@ export default class App extends Component {
             toggleManufacturer={this.toggleManufacturer.bind(this)}
             toggleAll={this.toggleAll.bind(this)}
           />
+        )}
+        {buildInfo && buildInfo.hash !== "unknown" && (
+          <Footer>
+            # {buildInfo.hash}{buildInfo.timestamp && ` · ${new Date(buildInfo.timestamp).toISOString().slice(0, 10)}`}
+          </Footer>
         )}
       </div>
     );
@@ -92,6 +100,18 @@ export default class App extends Component {
     });
   }
 }
+
+const Footer = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #e0e0e0;
+  color: #757575;
+  font-size: 13px;
+  text-align: center;
+  padding: 6px 0;
+`;
 
 const GlobalStyle = createGlobalStyle`
   @font-face {

@@ -19,6 +19,14 @@ CORS(app)
 validate_setup(GENERAL_CONFIG_FILE, CONFIGURATOR_NAME, SHOP_NAME)
 runner = Runner()
 
+@app.route("/build-info", methods=["GET"])
+def build_info():
+    build_info_path = os.path.join(os.path.dirname(__file__), "build-info.json")
+    if os.path.exists(build_info_path):
+        with open(build_info_path) as f:
+            return f.read(), 200, {"Content-Type": "application/json"}
+    return json.dumps({"hash": "dev", "branch": "", "timestamp": ""})
+
 @app.route("/reload", methods=["GET"])
 def reload():
     if runner.is_running():

@@ -1,3 +1,11 @@
+FROM alpine/git:latest AS build-info
+COPY .git /app/.git
+WORKDIR /app
+RUN printf '{"hash":"%s","branch":"%s","timestamp":"%s"}\n' \
+    "$(git rev-parse --short HEAD)" \
+    "$(git rev-parse --abbrev-ref HEAD)" \
+    "$(git log -1 --format=%cI)" > /build-info.json
+
 FROM node:11-alpine AS builder-node
 
 # Build client
@@ -35,5 +43,7 @@ RUN uv sync \
 
 # Add client application from node builder
 COPY --from=builder-node /app/client/build /app/client/build
+
+COPY --from=build-info /build-info.json /app/build-info.json
 
 CMD [ "uv", "run", "server.py" ]
