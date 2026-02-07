@@ -53,6 +53,15 @@ def run():
     else:
         return json.dumps(runner.get_exporters());
 
+@app.route("/stop", methods=["GET"])
+def stop():
+    exporter = request.args.get("exporter")
+    error_code = runner.stop_task(exporter)
+    if error_code != None:
+        return json.dumps({ "error": True, "code": error_code, "exporters": runner.get_exporters() })
+    else:
+        return json.dumps(runner.get_exporters())
+
 def send_attachement(path):
     try:
         return send_file(path, as_attachment=True)

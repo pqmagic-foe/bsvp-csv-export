@@ -6,6 +6,7 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import IconButton from "@material-ui/core/IconButton";
 import PlayIcon from "@material-ui/icons/PlayArrowOutlined";
+import StopIcon from "@material-ui/icons/StopOutlined";
 import LogIcon from "@material-ui/icons/DescriptionOutlined";
 import ResultIcon from "@material-ui/icons/GetAppOutlined";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -54,13 +55,19 @@ export default class Exporter extends Component {
   }
 
   renderRunButton() {
-    const { scheduled, running } = this.props;
-    if (running) {
+    const { scheduled, running, stopping } = this.props;
+    if (running && stopping) {
       return <StyledCircularProgress />;
+    } else if (running) {
+      return (
+        <IconButton onClick={this.stopExporter.bind(this)}>
+          <StopIcon style={{ color: "#d32f2f" }} />
+        </IconButton>
+      );
     } else {
       return (
         <IconButton onClick={this.runExporter.bind(this)} disabled={scheduled}>
-          <PlayIcon />
+          <PlayIcon style={scheduled ? {} : { color: "#388e3c" }} />
         </IconButton>
       );
     }
@@ -83,6 +90,12 @@ export default class Exporter extends Component {
     const { runExporter } = this.props;
     event.stopPropagation();
     this.setState({ open: true }, runExporter);
+  }
+
+  stopExporter(event) {
+    const { stopExporter } = this.props;
+    event.stopPropagation();
+    stopExporter();
   }
 
   downloadDisabled() {

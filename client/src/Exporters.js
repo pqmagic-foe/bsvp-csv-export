@@ -31,6 +31,7 @@ export default class Exporters extends Component {
               <Exporter
                 key={exporterId}
                 runExporter={() => this.runExporter(exporterId)}
+                stopExporter={() => this.stopExporter(exporterId)}
                 id={exporterId}
                 {...exporters[exporterId]}
               />
@@ -70,13 +71,14 @@ export default class Exporters extends Component {
 
   maybeTriggerUpdates() {
     const { exporters } = this.state;
-    const scheduledAndRunning = [
+    const activeStates = [
       ...Object.keys(exporters).map(
         exporterId => exporters[exporterId].scheduled
       ),
-      ...Object.keys(exporters).map(exporterId => exporters[exporterId].running)
+      ...Object.keys(exporters).map(exporterId => exporters[exporterId].running),
+      ...Object.keys(exporters).map(exporterId => exporters[exporterId].stopping)
     ];
-    const needsUpdates = scheduledAndRunning.some(scheduled => scheduled);
+    const needsUpdates = activeStates.some(active => active);
     if (needsUpdates && refreshInterval === null) {
       refreshInterval = setInterval(() => {
         this.getExporters();
@@ -104,6 +106,16 @@ export default class Exporters extends Component {
       exporter: exporterId,
       manufacturers: manufacturersParameter
     }).then(response => {
+      if (response.error) {
+        this.setState({ error: response.code, exporters: response.exporters });
+      } else {
+        this.setState({ exporters: response });
+      }
+    });
+  }
+
+  stopExporter(exporterId) {
+    get("/stop", { exporter: exporterId }).then(response => {
       if (response.error) {
         this.setState({ error: response.code, exporters: response.exporters });
       } else {

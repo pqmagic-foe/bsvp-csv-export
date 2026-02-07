@@ -85,6 +85,7 @@ class Runner:
                 "module": ConfiguratorExporter(self.manufacturers),
                 "scheduled": False,
                 "running": False,
+                "stopping": False,
                 "log": [],
                 "name": CONFIGURATOR_NAME
             },
@@ -92,6 +93,7 @@ class Runner:
                 "module": GambioExporter(self.manufacturers),
                 "scheduled": False,
                 "running": False,
+                "stopping": False,
                 "log": [],
                 "name": GAMBIO_NAME
             },
@@ -99,6 +101,7 @@ class Runner:
                 "module": ShopExporter(self.manufacturers),
                 "scheduled": False,
                 "running": False,
+                "stopping": False,
                 "log": [],
                 "name": SHOP_NAME
             },
@@ -106,6 +109,7 @@ class Runner:
                 "module": ShopJsonLDExporter(self.manufacturers),
                 "scheduled": False,
                 "running": False,
+                "stopping": False,
                 "log": [],
                 "name": SHOP_JSONLD_NAME
             },
@@ -113,6 +117,7 @@ class Runner:
                 "module": PriceExporter(self.manufacturers),
                 "scheduled": False,
                 "running": False,
+                "stopping": False,
                 "log": [],
                 "name": PRICE_NAME
             },
@@ -120,6 +125,7 @@ class Runner:
                 "module": CompleteExporter(self.manufacturers),
                 "scheduled": False,
                 "running": False,
+                "stopping": False,
                 "log": [],
                 "name": COMPLETE_NAME
             },
@@ -127,6 +133,7 @@ class Runner:
                 "module": CustomExporter(self.manufacturers),
                 "scheduled": False,
                 "running": False,
+                "stopping": False,
                 "log": [],
                 "name": CUSTOM_NAME
             }
@@ -166,6 +173,7 @@ class Runner:
                 "name": exporter_values["name"],
                 "scheduled": exporter_values["scheduled"],
                 "running": exporter_values["running"],
+                "stopping": exporter_values["stopping"],
                 "log": exporter_values["log"],
                 "last": last_export_date
             }
@@ -205,6 +213,18 @@ class Runner:
                 "Ausgewählte Hersteller: {}".format(", ".join(selected_manufacturers))
             )
         return None
+
+    def stop_task(self, exporter_id):
+        exporter = self.exporters[exporter_id]
+        if exporter["running"]:
+            exporter["stopping"] = True
+            return None
+        if exporter["scheduled"]:
+            self.tasks = [t for t in self.tasks if t["exporter"] != exporter_id]
+            exporter["scheduled"] = False
+            exporter["log"].append("Export abgebrochen um {}".format(get_time()))
+            return None
+        return "NOT_RUNNING"
 
     def split_large_result(self, exporter_module):
         output_directory = exporter_module.output_directory()
@@ -255,7 +275,12 @@ class Runner:
             current_product_number = None
             current_product_skips = None
 
+            stopped = False
             for manufacturer_name, manufacturer in self.manufacturers.items():
+                if exporter["stopping"]:
+                    stopped = True
+                    break
+
                 # Log Variablen anpassen
                 current_manufacturer = manufacturer_name
                 current_product_number = 0
@@ -280,6 +305,10 @@ class Runner:
                         continue
 
                 for product_name, product_path in manufacturer["products"].items():
+                    if exporter["stopping"]:
+                        stopped = True
+                        break
+
                     current_product_number += 1
                     exporter["log"][-1] = "{} ({})".format(
                         current_manufacturer,
@@ -328,8 +357,12 @@ class Runner:
                 logger.log(manufacturer_summary)
 
             # Export abschließen
-            self.split_large_result(exporter_module)
-            end_text = "Export beended um {}".format(get_time())
+            if stopped:
+                end_text = "Export abgebrochen um {}".format(get_time())
+                exporter["stopping"] = False
+            else:
+                self.split_large_result(exporter_module)
+                end_text = "Export beendet um {}".format(get_time())
             exporter["log"].append(end_text)
             logger.log("\n" + end_text)
             exporter["running"] = False
