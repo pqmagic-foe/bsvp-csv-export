@@ -58,9 +58,9 @@ def generate_additional_properties(prod_fields, mapping):
             if was_stripped:
                 property_value["value"] = stripped_value
                 logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' - removed duplicate unit: '{resolved_value}' -> '{stripped_value}'")
-            logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' = '{property_value['value']}' (unit: '{unit}')")
+            logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' = '{property_value['value']}' (unit: '{unit}') (template: '{template}')")
         else:
-            logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' = '{resolved_value}'")
+            logger.log(f"[JSON-LD] [INFO] Product '{product_name}': Property '{name}' = '{resolved_value}' (template: '{template}')")
 
         additional_properties.append(property_value)
 

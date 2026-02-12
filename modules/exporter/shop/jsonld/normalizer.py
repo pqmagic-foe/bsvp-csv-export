@@ -5,7 +5,7 @@ Unit normalization and value validation utilities for JSON-LD export
 
 import re
 from modules.logger import Logger
-from modules.formatter import format_field
+from modules.formatter import format_field, format_options_jsonld
 
 
 def get_product_name(prod_fields):
@@ -40,7 +40,10 @@ def parse_template(template, prod_fields, log_field_name=None):
             techdata = prod_fields.get("TECHDATA", {})
             value = techdata.get(field_id)
             if value is not None and isinstance(value, str):
-                value = format_field(value, field_id)
+                raw_value = value
+                value = format_field(value, field_id, format_options_jsonld)
+                if value != raw_value:
+                    logger.log(f"[JSON-LD] [DEBUG] Formatted '{field_id}': '{raw_value}' -> '{value}'")
         elif source == "PROD":
             value = prod_fields.get(field_id)
         else:

@@ -8,6 +8,7 @@ ATTRIBUTES_PATH = "mappings/MasterRecordMask.da"
 JSONLD_MAPPING_PATH = "mappings/jsonld/jsonld-mapping.json"
 GENERAL_CONFIG_FILE = "config.json"
 FORMATTING_CONFIG_FILE = "Formatierungen.yaml"
+FORMATTING_JSONLD_CONFIG_FILE = "Formatierungen JSON+LD.yaml"
 LOG_DIRECTORY = "logs"
 
 # Weitere Konstanten und Einstellungen

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, yaml
 from collections import OrderedDict
-from modules.constants import CONFIGS_DIRECTORY, FORMATTING_CONFIG_FILE
+from modules.constants import CONFIGS_DIRECTORY, FORMATTING_CONFIG_FILE, FORMATTING_JSONLD_CONFIG_FILE
 from .decimal_separator import decimal_separator
 from .range_from_zero import range_from_zero
 from .replacement import replacement
@@ -14,8 +14,8 @@ formatters = {
     "gruppierungen": grouping
 }
 
-def get_format_options():
-    with open(os.path.join(CONFIGS_DIRECTORY, FORMATTING_CONFIG_FILE), "r") as formatting_config_file:
+def get_format_options(config_file=FORMATTING_CONFIG_FILE):
+    with open(os.path.join(CONFIGS_DIRECTORY, config_file), "r") as formatting_config_file:
         format_config = yaml.load(formatting_config_file, Loader=yaml.FullLoader)
     
     # Formatierungen so umschreiben, dass sie durch die Feld ID erreichbar sind.
@@ -75,9 +75,12 @@ def get_format_options():
     return(format_options)
 
 format_options = get_format_options()
+format_options_jsonld = get_format_options(FORMATTING_JSONLD_CONFIG_FILE)
 
-def format_field(value, field_name):
-    if field_name in format_options:
-        for format_option in format_options[field_name]:
+def format_field(value, field_name, options=None):
+    if options is None:
+        options = format_options
+    if field_name in options:
+        for format_option in options[field_name]:
             value = formatters[format_option["type"]](value, format_option)
     return value
