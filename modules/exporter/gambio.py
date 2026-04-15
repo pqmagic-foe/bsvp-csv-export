@@ -2,7 +2,7 @@ import json
 from collections import OrderedDict
 from modules.exporter.shop import ShopExporter, special_cases, export_description
 from modules.exporter.shop.gm_price_status import export_gm_price_status
-from modules.constants import GAMBIO_NAME, SHOP_NAME, TECHDATA
+from modules.constants import GAMBIO_NAME, SHOP_NAME, TECHDATA, PRODUCT_TYPE_ID
 from modules.formatter import format_field
 
 category_prefix = "p_cat"
@@ -97,11 +97,12 @@ class GambioExporter(ShopExporter):
                 row.append(value)
 
         # Füge TECHDATA Felder hinter Shop Feldern an
+        maske = prod_fields.get(TECHDATA, {}).get(PRODUCT_TYPE_ID)
         for techdata_field in self.techdata_fields.keys():
             value = None
             if TECHDATA in prod_fields:
                 techdata = prod_fields[TECHDATA]
                 if techdata_field in techdata:
-                    value = format_field(techdata[techdata_field], techdata_field)
+                    value = format_field(techdata[techdata_field], techdata_field, maske=maske)
             row.append(value)
         return row

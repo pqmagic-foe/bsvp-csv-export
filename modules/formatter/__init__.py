@@ -38,6 +38,8 @@ def get_format_options(config_file=FORMATTING_CONFIG_FILE):
                     format_option = { "type": option }
                     if "id" in parameters:
                         format_option["id"] = parameters["id"]
+                    if "masken" in parameters:
+                        format_option["masken"] = parameters["masken"]
                     if option == "ersetzungen":
                         format_option["before"] = parameters["vorher"]
                         format_option["afterwards"] = parameters["nachher"]
@@ -77,10 +79,12 @@ def get_format_options(config_file=FORMATTING_CONFIG_FILE):
 format_options = get_format_options()
 format_options_jsonld = get_format_options(FORMATTING_JSONLD_CONFIG_FILE)
 
-def format_field(value, field_name, options=None):
+def format_field(value, field_name, options=None, maske=None):
     if options is None:
         options = format_options
     if field_name in options:
         for format_option in options[field_name]:
+            if maske is not None and "masken" in format_option and maske not in format_option["masken"]:
+                continue
             value = formatters[format_option["type"]](value, format_option)
     return value

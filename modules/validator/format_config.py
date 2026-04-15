@@ -44,3 +44,10 @@ def validate_format_config(export_configs_directory, format_config_file_name):
                             "[FEHLER] Ungültige Option '{}' in der {}. Ersetzung in 'formatierungen' der {}"
                             .format(option, index + 1, format_config_file_path)
                         )
+                if "masken" in replacement:
+                    validate_list(
+                        replacement,
+                        "masken",
+                        format_config_file_path,
+                        "in der {}. Ersetzung in 'formatierungen' ".format(index + 1)
+                    )
