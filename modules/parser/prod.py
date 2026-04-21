@@ -1,5 +1,6 @@
 import os, sys, html, re
 from collections import OrderedDict
+from modules.constants import MASK
 
 DATA_SEPARTOR = "§+§"
 ATTRIBUTE_SEPARATOR = "§-§"
@@ -32,14 +33,17 @@ def parse_product(product_path):
         field_attributes = field_value.split(ATTRIBUTE_SEPARATOR)
         if len(field_attributes) > 1:
             attributes = {}
+            mask_name = None
             for attribute in field_attributes:
                 attribute = attribute.split("@")
                 if len(attribute) != 2:
                     continue
-                try:
-                    attribute_id = re.search(r"\[\[.*\.(.+?)\]\]", attribute[1]).group(1)
-                except AttributeError:
+                mask_match = re.search(r"\[\[(.+?)\.(\d+)\]\]", attribute[1])
+                if mask_match is None:
                     continue
+                if mask_name is None:
+                    mask_name = mask_match.group(1)
+                attribute_id = mask_match.group(2)
                 try:
                     attribute_parts = attribute[0].split("::")
                     attribute_type = attribute_parts[0]
@@ -53,6 +57,8 @@ def parse_product(product_path):
                     continue
                 attributes[attribute_id] = attribute_value
             fields[field_name] = attributes
+            if mask_name is not None:
+                fields[MASK] = mask_name
         else:
             fields[field_name] = field_value
 

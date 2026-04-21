@@ -2,7 +2,7 @@
 from ..base_exporter import BaseExporter
 from .configs import transform_configs
 from modules.formatter import format_field
-from modules.constants import CONFIGURATOR_NAME, PRODUCT_TYPE_ID, TECHDATA
+from modules.constants import CONFIGURATOR_NAME, PRODUCT_TYPE_ID, TECHDATA, MASK
 from modules.exporter.utils.flatten_fields import flatten_fields
 
 class ConfiguratorExporter(BaseExporter):
@@ -102,7 +102,7 @@ class ConfiguratorExporter(BaseExporter):
 
     def get_field(self, config, fields, field_name):
         if field_name in fields:
-            maske = fields.get(PRODUCT_TYPE_ID)
+            maske = fields.get(MASK)
             return format_field(fields[field_name], field_name, maske=maske)
         else:
             return None

@@ -6,7 +6,7 @@ Unit normalization and value validation utilities for JSON-LD export
 import re
 from modules.logger import Logger
 from modules.formatter import format_field, format_options_jsonld
-from modules.constants import PRODUCT_TYPE_ID
+from modules.constants import MASK
 
 
 def get_product_name(prod_fields):
@@ -26,8 +26,7 @@ def strip_unit_suffix(value, unit):
 def parse_template(template, prod_fields, log_field_name=None):
     logger = Logger()
 
-    techdata_all = prod_fields.get("TECHDATA", {})
-    maske = techdata_all.get(PRODUCT_TYPE_ID) if techdata_all else None
+    maske = prod_fields.get(MASK)
 
     pattern = r'\$([A-Z]+)::([^\$]+)\$'
     matches = re.findall(pattern, template)
