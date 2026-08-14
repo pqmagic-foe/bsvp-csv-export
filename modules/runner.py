@@ -12,7 +12,7 @@ import traceback
 from apscheduler.schedulers.background import BackgroundScheduler
 from modules.constants import GENERAL_CONFIG_FILE, MANUFACTURER_ENDING, \
     MANUFACTURER_INFO_ENDING, PRODUCT_ENDING, \
-    CONFIGURATOR_NAME, SHOP_JSONLD_NAME, PRICE_NAME, \
+    CONFIGURATOR_NAME, SHOP_JSONLD_NAME, PRICE_NAME, BSVP_CORE_NAME, \
     DATA_DIRECTORY
 from modules.parser.gpsr import gpsr_load_configs
 
@@ -21,6 +21,7 @@ from modules.parser.ilugg import parse_manufacturer_information
 from modules.exporter.configurator import ConfiguratorExporter
 from modules.exporter.shop_jsonld import ShopJsonLDExporter
 from modules.exporter.price import PriceExporter
+from modules.exporter.bsvp_core import BsvpCoreExporter
 from modules.logger import Logger
 
 def write_skip_log(logger, file, error):
@@ -100,6 +101,14 @@ class Runner:
                 "stopping": False,
                 "log": [],
                 "name": PRICE_NAME
+            },
+            "bsvp_core": {
+                "module": BsvpCoreExporter(self.manufacturers),
+                "scheduled": False,
+                "running": False,
+                "stopping": False,
+                "log": [],
+                "name": BSVP_CORE_NAME
             }
         }
 

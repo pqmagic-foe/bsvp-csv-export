@@ -151,6 +151,29 @@ in einer Liste (eckige Klammern) angegeben.
 
 Der Preis Exporter besitzt keine weiteren Einstellungen, er exportiert legiglich Artikelnummer, -name und Preis.
 
+### BSVP Core
+
+Der BSVP Core Exporter besitzt keine weiteren Einstellungen. Er erzeugt eine Import-CSV pro Hersteller, die im Shop
+ausschließlich die **zusätzlichen Produktkategorien** setzt. Grundlage sind die `p_cat_add.0`, `p_cat_add.1`, ... Felder
+aus den BSVP-Produkt-Dateien; das sind die IDs der zusätzlichen Kategorien im Shop.
+
+Die CSV enthält nur die Spalten, die für diesen Zweck nötig sind:
+
+```
+XTSOL§action§p_model§p_cat_add.0§...§p_cat_add.9
+XTSOL§update§402729665§884§890§2286§§§§§§§
+```
+
+- `XTSOL`: Markierung für den Anfang eines Datensatzes, wird vom Importer benötigt
+- `action`: wird aus dem `ACTION` Feld des Produkts übernommen
+- `p_model`: die Artikelnummer (`ARTNR`), über die der Importer das Produkt im Shop findet
+- `p_cat_add.N`: die zusätzlichen Kategorie-IDs, leere Spalten werden vom Importer ignoriert
+
+Weil in der Datei keine anderen Spalten stehen, lässt der Importer alle übrigen Produktdaten unangetastet; die
+Kategorien werden nur hinzugefügt, nie entfernt. Produkte ohne `p_cat_add` Felder werden gar nicht erst exportiert.
+Es sind maximal 10 zusätzliche Kategorien pro Produkt möglich; Produkte mit mehr Kategorien werden übersprungen und im
+Log vermerkt.
+
 ### Formatierungen
 
 Formatierungen können in der Datei `Formatierungen.yaml` definiert werden. Ein Beispiel sieht wie folgt aus:
