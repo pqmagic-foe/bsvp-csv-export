@@ -3,6 +3,7 @@ import sys
 import json
 from .helpers import validate_required_fields
 from modules.exporter.shop import special_case_names
+from modules.exporter.shop_jsonld import jsonld_special_case_names
 
 shop_config_value_types = [ "iterierbar", "wert", "prod", "ilugg" ]
 iterable_max_value_types = shop_config_value_types[1:]
@@ -31,7 +32,7 @@ def validate_shop_config(export_configs_directory, shop_name):
     with open(shop_config_path, "r", encoding="utf-8") as shop_config_file:
         shop_config = json.load(shop_config_file)
 
-    special_cases = special_case_names()
+    special_cases = special_case_names() + jsonld_special_case_names()
     for name, specification in shop_config.items():
         if name in special_cases: continue
         if len(list(specification.keys())) != 1:

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from modules.constants import MANUFACTURER_ENDING, SHOP_NAME
+from modules.constants import MANUFACTURER_ENDING
 from ..base_exporter import BaseExporter
 import json
 from modules.parser.tooltips import parse_tooltips
@@ -31,12 +31,13 @@ def escape(value):
     return unescape_bsvp_to_html(value)
 
 class ShopExporter(BaseExporter):
-    def __init__(self, manufacturers, config_name = None):
+    """Basisklasse für Shop-Exporter, wird nicht direkt verwendet."""
+
+    def __init__(self, manufacturers, config_name):
         super().__init__(manufacturers)
         self.manufacturer_ending = MANUFACTURER_ENDING
         self.tooltips = parse_tooltips(self.tooltip_path)
         self.csv_separator = self.shop_csv_separator
-        config_name = self.name() if config_name == None else config_name
         export_config_path = self.configs_base_directory + config_name + ".json"
         with open(export_config_path, "r", encoding="utf-8") as export_config_file:
             self.export_config = json.load(export_config_file, object_pairs_hook=OrderedDict)
@@ -46,9 +47,6 @@ class ShopExporter(BaseExporter):
         # Konfiguration des Exporters
         self.uses_manufacturer_information = True
         self.skipping_policy["delivery_status"] = False
-
-    def name(self):
-        return SHOP_NAME
 
     def __csv_path(self, manufacturer_name):
         return self.output_directory() + manufacturer_name + ".csv"

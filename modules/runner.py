@@ -12,19 +12,15 @@ import traceback
 from apscheduler.schedulers.background import BackgroundScheduler
 from modules.constants import GENERAL_CONFIG_FILE, MANUFACTURER_ENDING, \
     MANUFACTURER_INFO_ENDING, PRODUCT_ENDING, \
-    CONFIGURATOR_NAME, GAMBIO_NAME, SHOP_NAME, SHOP_JSONLD_NAME, PRICE_NAME, COMPLETE_NAME, \
-    DATA_DIRECTORY, CUSTOM_NAME
+    CONFIGURATOR_NAME, SHOP_JSONLD_NAME, PRICE_NAME, \
+    DATA_DIRECTORY
 from modules.parser.gpsr import gpsr_load_configs
 
 from modules.parser.prod import parse_product
 from modules.parser.ilugg import parse_manufacturer_information
 from modules.exporter.configurator import ConfiguratorExporter
-from modules.exporter.gambio import GambioExporter
-from modules.exporter.complete import CompleteExporter
-from modules.exporter.shop import ShopExporter
 from modules.exporter.shop_jsonld import ShopJsonLDExporter
 from modules.exporter.price import PriceExporter
-from modules.exporter.custom import CustomExporter
 from modules.logger import Logger
 
 def write_skip_log(logger, file, error):
@@ -89,22 +85,6 @@ class Runner:
                 "log": [],
                 "name": CONFIGURATOR_NAME
             },
-            "gambio": {
-                "module": GambioExporter(self.manufacturers),
-                "scheduled": False,
-                "running": False,
-                "stopping": False,
-                "log": [],
-                "name": GAMBIO_NAME
-            },
-            "shop": {
-                "module": ShopExporter(self.manufacturers),
-                "scheduled": False,
-                "running": False,
-                "stopping": False,
-                "log": [],
-                "name": SHOP_NAME
-            },
             "shop_jsonld": {
                 "module": ShopJsonLDExporter(self.manufacturers),
                 "scheduled": False,
@@ -120,22 +100,6 @@ class Runner:
                 "stopping": False,
                 "log": [],
                 "name": PRICE_NAME
-            },
-            "complete": {
-                "module": CompleteExporter(self.manufacturers),
-                "scheduled": False,
-                "running": False,
-                "stopping": False,
-                "log": [],
-                "name": COMPLETE_NAME
-            },
-            "custom": {
-                "module": CustomExporter(self.manufacturers),
-                "scheduled": False,
-                "running": False,
-                "stopping": False,
-                "log": [],
-                "name": CUSTOM_NAME
             }
         }
 

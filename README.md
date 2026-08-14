@@ -43,40 +43,11 @@ Die Kofigurations-Dateien sind im JSON oder YAML Format hinterlegt. Es empfiehlt
 JSON-Erweiterung zu arbeiten, der auf Fehler aufmerksam machen kann (z.B. Notepad++) oder die JSON-Dateien mit einem
 Online-Validierer (z.B. [JSONLint](https://jsonlint.com/)) zu überprüfen; gleiches gilt für das YAML Format.
 
-### Komplett
+### Shop + JSON-LD
 
-In der `Komplett.json` können verschiedene Einstellungen für den kompletten Export festgelegt werden:
-
-- `exclude`: Felder angeben, die nicht im kompletten Export enthalten sein sollen. Es können normale Felder mit Namen (
-  z.B. `ARTLISTING`) und TECHDATA Felder mit ID (z.B. `0000009`) angegeben werden.
-
-```json
-{
-  "exclude": [
-    "ARTLISTING",
-    "CAT0M",
-    "0000009"
-  ]
-}
-```
-
-### Gambio
-
-Der Gambio Export übernimmt die Konfiguration des Shop Exports, sowie die `Formatierungen.yaml`, die auch vom
-Konfigurator Export genutzt wird (siehe weiter unten). Außerdem können die zu exportieren technischen Daten in der
-`Gambio.json` als Objekt festgelegt werden, mit der ID als Bezeichner und dem Namen in der CSV als Wert:
-
-```json
-{
-  "0000003": "Gerät ist abschließbar",
-  "0000011": "Anordnung Kälteaggregat"
-}
-```
-
-### Shop
-
-Durch die `Shop.json` werden Felder angegeben, die in die CSV Datei pro Hersteller geschrieben werden. Als Bezeichner
-eines Feldes wird der Name angegeben, wie er in der CSV erscheint, als Wert ein Objekt, das den Wert beschreibt:
+Durch die `Shop + JSON-LD.json` werden Felder angegeben, die in die CSV Datei pro Hersteller geschrieben werden. Als
+Bezeichner eines Feldes wird der Name angegeben, wie er in der CSV erscheint, als Wert ein Objekt, das den Wert
+beschreibt:
 
 ```json
 {
@@ -179,25 +150,6 @@ in einer Liste (eckige Klammern) angegeben.
 ### Preis
 
 Der Preis Exporter besitzt keine weiteren Einstellungen, er exportiert legiglich Artikelnummer, -name und Preis.
-
-### Custom
-
-Der Custom Exporter ist eine schnelle Möglichkeit, nur über das Anpassen der `Custom.json` bestimmte Felder zu
-exportieren.
-Bitte beachten: Die Exporter müssen über das Web-Interface neu geladen werden, wenn die `Custom.json` bei laufendem
-Server geändert wurde (ein Neustart ist nicht nötig).
-
-Die einfache Konfiguration enthält lediglich den CSV-Header-Namen (z.B. `"artikelnummer"` oder `"kaeltemittel"`) und das
-Feld im Produkt (z.B. `"ARTNR"` oder `"0000139"`).
-
-Zusätzlich kann geprüft werden, ob bestimmte Werte in einem Feld vorhanden sind.
-Nur solche Produkte werden exportiert, die den angegebenen Text enthalten.
-Das kann wie folgt definiert werden: `"kaeltemittel": {"field": "0000139", "contains": "404"}`.
-
-Wenn solche Überprüfungen für mehrere Werte angegeben werden, werden nur solche Produkte exportiert, die alle
-Bedingungen erfüllen. Wenn zum Beispiel zusätzlich zum Kältemittel noch
-`"artikelnummer": {"field": "ARTNR", "contains": "AHT"}` angegeben wird, werden nur Artikel exportiert deren
-Artikelnummer sowohl `AHT` UND deren Kältemittel `404` beinhaltet.
 
 ### Formatierungen
 

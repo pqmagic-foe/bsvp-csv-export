@@ -8,7 +8,7 @@ from modules.runner import Runner
 from modules.validator import validate_setup
 from modules.logger import Logger
 from modules.constants import GENERAL_CONFIG_FILE, CONFIGURATOR_NAME, \
-    SHOP_NAME
+    SHOP_JSONLD_NAME
 from modules.download import zip_result
 
 import os
@@ -16,7 +16,7 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-validate_setup(GENERAL_CONFIG_FILE, CONFIGURATOR_NAME, SHOP_NAME)
+validate_setup(GENERAL_CONFIG_FILE, CONFIGURATOR_NAME, SHOP_JSONLD_NAME)
 runner = Runner()
 
 @app.route("/build-info", methods=["GET"])
